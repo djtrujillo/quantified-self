@@ -92,7 +92,7 @@
 	var requestUrl = "http://localhost:3000/api/v1";
 
 	var tableRow = function tableRow(food) {
-	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td></tr>";
+	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td><td><button type=\"submit\"><img src=\"/lib/assets/images/delete.png\" alt=\"something\"></button></td></tr>";
 	};
 
 	var getFoods = function getFoods() {

@@ -48,8 +48,6 @@
 
 	var _events = __webpack_require__(1);
 
-	var _mealEvents = __webpack_require__(3);
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -66,7 +64,6 @@
 
 
 	var clickSubmit = $('#new-food-submit').on('click', function (event) {
-	  console.log('clicked');
 	  event.preventDefault();
 	  var food = $('#food').val();
 	  var calories = $('#calories').val();
@@ -79,9 +76,14 @@
 	    (0, _foods.postFood)(food, calories);
 	  }
 	});
-	// }
 
-	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit };
+	var clickDelete = $(document).on('click', '#food-table .delete-food', function (event) {
+	  console.log("Clicked");
+	  var id = $(this).attr("data-id");
+	  (0, _foods.deleteFood)(id);
+	});
+
+	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit, clickDelete: clickDelete };
 
 /***/ }),
 /* 2 */
@@ -92,13 +94,13 @@
 	var requestUrl = "http://localhost:3000/api/v1";
 
 	var tableRow = function tableRow(food) {
-	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td><td><button type=\"submit\"><img src=\"/lib/assets/images/delete.png\" alt=\"something\"></button></td></tr>";
+	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td><td><button class=\"delete-food\" data-id=" + food["id"] + " type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>";
 	};
 
 	var getFoods = function getFoods() {
 	  $.get(requestUrl + "/foods").then(function (foods) {
 	    foods.forEach(function (food) {
-	      $("#food-table").prepend(tableRow(food));
+	      $("#food-table tr:first").after(tableRow(food));
 	    });
 	  });
 	};
@@ -115,94 +117,17 @@
 	  });
 	};
 
-	module.exports = { getFoods: getFoods, postFood: postFood };
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _meals = __webpack_require__(4);
-
-	if (window.location.pathname == '/') {
-	  var _onIndexLoad = $(document).ready(function () {
-	    (0, _meals.getMeals)();
-	  });
-
-	  // const clickSubmit = $('#new-food-submit').on('click', function(event){
-	  //   console.log('clicked')
-	  //   event.preventDefault()
-	  //   const food = $('#food').val()
-	  //   const calories = $('#calories').val()
-	  //
-	  //   if (food === "") {
-	  //     alert("Please enter food")
-	  //   }
-	  //   else if (calories === "") {
-	  //     alert("Please enter calories")
-	  //   }
-	  //   else {
-	  //     postFood(food, calories)
-	  //   }
-	  // })
-	}
-
-	module.exports = { onIndexLoad: onIndexLoad };
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	var requestUrl = "http://localhost:3000/api/v1";
-
-	var breakfastGoal = 400;
-	var lunchGoal = 600;
-	var dinnerGoal = 800;
-	var snackGoal = 200;
-
-	var tableRow = function tableRow(food, calories) {
-	  return "<tr><td>" + food + "</td><td>" + calories + "</td></tr>";
-	};
-
-	var totalCaloriesRow = function totalCaloriesRow(calories) {
-	  return "<tr><th>Total Calories</th><td>" + calories + "</td></tr>";
-	};
-
-	var remainingCaloriesRow = function remainingCaloriesRow(calories) {
-	  return "<tr><td>Remaining Calories</td><td>" + calories + "</td></tr>";
-	};
-
-	var getMeals = function getMeals() {
-	  $.get(requestUrl + "/meals").then(function (meals) {
-	    populateTable(meals);
-	    calculateCalories(meals);
+	var deleteFood = function deleteFood(id) {
+	  $.ajax({
+	    url: requestUrl + "/foods/" + id,
+	    type: 'DELETE',
+	    success: function success(result) {
+	      location.reload(true);
+	    }
 	  });
 	};
 
-	var populateTable = function populateTable(meals) {
-	  meals.forEach(function (meal) {
-	    meal["foods"].forEach(function (item) {
-	      var food = item["name"];
-	      var calories = item["calories"];
-	      $("#" + meal["name"].toLowerCase() + "-table").append(tableRow(food, calories));
-	    });
-	  });
-	};
-
-	var calculateCalories = function calculateCalories(meals) {
-	  meals.forEach(function (meal) {
-	    var totalCalories = 0;
-	    meal["foods"].forEach(function (item) {
-	      totalCalories += item["calories"];
-	    });
-	    $("#" + meal["name"].toLowerCase() + "-table").append(totalCaloriesRow(totalCalories));
-	  });
-	};
-
-	module.exports = { getMeals: getMeals };
+	module.exports = { getFoods: getFoods, postFood: postFood, deleteFood: deleteFood };
 
 /***/ })
 /******/ ]);

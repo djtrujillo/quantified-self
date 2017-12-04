@@ -48,8 +48,6 @@
 
 	var _events = __webpack_require__(1);
 
-	var _mealEvents = __webpack_require__(3);
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -66,7 +64,6 @@
 
 
 	var clickSubmit = $('#new-food-submit').on('click', function (event) {
-	  console.log('clicked');
 	  event.preventDefault();
 	  var food = $('#food').val();
 	  var calories = $('#calories').val();
@@ -79,9 +76,14 @@
 	    (0, _foods.postFood)(food, calories);
 	  }
 	});
-	// }
 
-	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit };
+	var clickDelete = $(document).on('click', '#food-table .delete-food', function (event) {
+	  console.log("Clicked");
+	  var id = $(this).attr("data-id");
+	  (0, _foods.deleteFood)(id);
+	});
+
+	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit, clickDelete: clickDelete };
 
 /***/ }),
 /* 2 */
@@ -92,13 +94,13 @@
 	var requestUrl = "http://localhost:3000/api/v1";
 
 	var tableRow = function tableRow(food) {
-	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td></tr>";
+	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td><td><button class=\"delete-food\" data-id=" + food["id"] + " type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>";
 	};
 
 	var getFoods = function getFoods() {
 	  $.get(requestUrl + "/foods").then(function (foods) {
 	    foods.forEach(function (food) {
-	      $("#food-table").prepend(tableRow(food));
+	      $("#food-table tr:first").after(tableRow(food));
 	    });
 	  });
 	};
@@ -115,6 +117,7 @@
 	  });
 	};
 
+<<<<<<< HEAD
 	module.exports = { getFoods: getFoods, postFood: postFood };
 
 /***/ }),
@@ -268,6 +271,19 @@
 	});
 
 	module.exports = { getMeals: getMeals };
+=======
+	var deleteFood = function deleteFood(id) {
+	  $.ajax({
+	    url: requestUrl + "/foods/" + id,
+	    type: 'DELETE',
+	    success: function success(result) {
+	      location.reload(true);
+	    }
+	  });
+	};
+
+	module.exports = { getFoods: getFoods, postFood: postFood, deleteFood: deleteFood };
+>>>>>>> master
 
 /***/ })
 /******/ ]);

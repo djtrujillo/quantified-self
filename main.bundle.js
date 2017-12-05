@@ -81,11 +81,31 @@
 
 	var clickDelete = $(document).on('click', '#food-table .delete-food', function (event) {
 	  console.log("Clicked");
-	  var id = $(this).attr("data-id");
+	  var id = $(this.parentElement.parentElement).attr("id");
+
 	  (0, _foods.deleteFood)(id);
 	});
 
-	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit, clickDelete: clickDelete };
+	var clickFood = $(document).on('blur', '#food-table .food-name', function (event) {
+	  console.log("food-name clicked");
+	  var newFood = this.innerHTML;
+	  var id = $(this.parentElement).attr("id");
+	  (0, _foods.editFood)(newFood, id);
+	});
+
+	var clickCalories = $(document).on('blur', '#food-table .food-calories', function (event) {
+	  console.log("food-calories clicked");
+	  var newCalories = this.innerHTML;
+	  var id = $(this.parentElement).attr("id");
+	  (0, _foods.editCalories)(newCalories, id);
+	});
+
+	var filter = $("#filter").on('keyup', function () {
+	  var input = $(this).val().toLowerCase();
+	  (0, _foods.filterByName)(input);
+	});
+
+	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit, clickDelete: clickDelete, clickFood: clickFood, clickCalories: clickCalories, filter: filter };
 
 /***/ }),
 /* 2 */
@@ -96,7 +116,7 @@
 	var requestUrl = "http://localhost:3000/api/v1";
 
 	var tableRow = function tableRow(food) {
-	  return "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td><td><button class=\"delete-food\" data-id=" + food["id"] + " type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>";
+	  return "<tr id=" + food["id"] + "><td class=\"food-name\">" + food["name"] + "</td><td class=\"food-calories\">" + food["calories"] + "</td><td><button class=\"delete-food\" type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>";
 	};
 
 	var getFoods = function getFoods() {
@@ -104,6 +124,10 @@
 	    foods.forEach(function (food) {
 	      $("#food-table tr:first").after(tableRow(food));
 	    });
+	    var tds = document.getElementsByTagName('td');
+	    for (var i = 0; i < tds.length; i++) {
+	      tds[i].contentEditable = 'true';
+	    };
 	  });
 	};
 
@@ -115,7 +139,6 @@
 	    }
 	  }).then(function () {
 	    location.reload(true);
-	    // getFoods()
 	  });
 	};
 
@@ -129,7 +152,40 @@
 	  });
 	};
 
-	module.exports = { getFoods: getFoods, postFood: postFood, deleteFood: deleteFood };
+	var editFood = function editFood(newFood, id) {
+	  $.ajax({
+	    url: requestUrl + "/foods/" + id,
+	    type: 'PATCH',
+	    data: { food: { "name": newFood } },
+	    success: function success(result) {
+	      location.reload(true);
+	    }
+	  });
+	};
+
+	var editCalories = function editCalories(newCalories, id) {
+	  $.ajax({
+	    url: requestUrl + "/foods/" + id,
+	    type: 'PATCH',
+	    data: { food: { "calories": newCalories } },
+	    success: function success(result) {
+	      location.reload(true);
+	    }
+	  });
+	};
+
+	var filterByName = function filterByName(input) {
+	  var input = input;
+	  var foodName = $(".food-name");
+
+	  foodName.parent().hide();
+
+	  foodName.filter(function () {
+	    return $(this).text().toLowerCase().indexOf(input) == 0;
+	  }).parent().show();
+	};
+
+	module.exports = { getFoods: getFoods, postFood: postFood, deleteFood: deleteFood, editFood: editFood, editCalories: editCalories, filterByName: filterByName };
 
 /***/ }),
 /* 3 */

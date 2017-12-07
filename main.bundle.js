@@ -46,7 +46,7 @@
 
 	"use strict";
 
-	var _events = __webpack_require__(1);
+	var _foodEvents = __webpack_require__(1);
 
 	var _mealEvents = __webpack_require__(4);
 
@@ -80,14 +80,11 @@
 	});
 
 	var clickDelete = $(document).on('click', '#food-table .delete-food', function (event) {
-	  console.log("Clicked");
 	  var id = $(this.parentElement.parentElement).attr("id");
-
 	  (0, _foods.deleteFood)(id);
 	});
 
 	var clickFood = $(document).on('blur', '#food-table .food-name', function (event) {
-	  console.log("food-name clicked");
 	  var newFood = this.innerHTML;
 	  var id = $(this.parentElement).attr("id");
 	  (0, _foods.editFood)(newFood, id);
@@ -113,21 +110,19 @@
 
 	"use strict";
 
+<<<<<<< HEAD
 	var _foodResponses = __webpack_require__(3);
+=======
+	var _foodResponseHandlers = __webpack_require__(3);
+>>>>>>> master
 
-	var tableRow = function tableRow(food) {
-	  return "<tr id=" + food["id"] + "><td class=\"food-name\">" + food["name"] + "</td><td class=\"food-calories\">" + food["calories"] + "</td><td><button class=\"delete-food\" type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>";
-	};
+	var requestUrl = "http://localhost:3000/api/v1";
 
 	var getFoods = function getFoods() {
 	  $.get(requestUrl + "/foods").then(function (foods) {
 	    foods.forEach(function (food) {
-	      $("#food-table tr:first").after(tableRow(food));
+	      (0, _foodResponseHandlers.addFoodToTable)(food);
 	    });
-	    var tds = document.getElementsByTagName('td');
-	    for (var i = 0; i < tds.length; i++) {
-	      tds[i].contentEditable = 'true';
-	    };
 	  });
 	};
 
@@ -137,8 +132,8 @@
 	      "name": food,
 	      "calories": calories
 	    }
-	  }).then(function () {
-	    location.reload(true);
+	  }).then(function (food) {
+	    (0, _foodResponseHandlers.addFoodToTable)(food);
 	  });
 	};
 
@@ -147,7 +142,7 @@
 	    url: requestUrl + "/foods/" + id,
 	    type: 'DELETE',
 	    success: function success(result) {
-	      location.reload(true);
+	      (0, _foodResponseHandlers.hideTableRow)(id);
 	    }
 	  });
 	};
@@ -157,7 +152,7 @@
 	    url: requestUrl + "/foods/" + id,
 	    type: 'PATCH',
 	    data: { food: { "name": newFood } },
-	    success: function success(result) {
+	    success: function success(food) {
 	      location.reload(true);
 	    }
 	  });
@@ -190,6 +185,7 @@
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
+<<<<<<< HEAD
 
 	"use strict";
 
@@ -208,6 +204,36 @@
 
 	'use strict';
 
+=======
+
+	'use strict';
+
+	var makeContentEditable = function makeContentEditable() {
+	  var tds = document.getElementsByTagName('td');
+	  for (var i = 0; i < tds.length; i++) {
+	    tds[i].contentEditable = 'true';
+	  };
+	};
+
+	var hideTableRow = function hideTableRow(id) {
+	  $('#' + id).hide();
+	};
+
+	var addFoodToTable = function addFoodToTable(food) {
+	  var tableRow = '<tr id=' + food["id"] + '><td class="food-name">' + food["name"] + '</td><td class="food-calories">' + food["calories"] + '</td><td><button class="delete-food" type="submit"><img src="/lib/assets/images/delete.png" /></button></td>></tr>';
+	  $("#food-table tr:first").after(tableRow);
+	  makeContentEditable();
+	};
+
+	module.exports = { makeContentEditable: makeContentEditable, hideTableRow: hideTableRow, addFoodToTable: addFoodToTable };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+>>>>>>> master
 	var _meals = __webpack_require__(5);
 
 	if (window.location.pathname == '/') {

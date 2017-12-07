@@ -91,7 +91,6 @@
 	});
 
 	var clickCalories = $(document).on('blur', '#food-table .food-calories', function (event) {
-	  console.log("food-calories clicked");
 	  var newCalories = this.innerHTML;
 	  var id = $(this.parentElement).attr("id");
 	  (0, _foods.editCalories)(newCalories, id);
@@ -110,11 +109,7 @@
 
 	"use strict";
 
-<<<<<<< HEAD
-	var _foodResponses = __webpack_require__(3);
-=======
 	var _foodResponseHandlers = __webpack_require__(3);
->>>>>>> master
 
 	var requestUrl = "http://localhost:3000/api/v1";
 
@@ -185,26 +180,6 @@
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
-<<<<<<< HEAD
-
-	"use strict";
-
-	var createFoodsTable = function createFoodsTable(foods) {
-	  foods.forEach(function (food) {
-	    var tableRow = "<tr><td>" + food["name"] + "</td><td>" + food["calories"] + "</td><td><button class=\"delete-food\" data-id=" + food["id"] + " type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>";
-	    $("#food-table tr:first").after(tableRow);
-	  });
-	};
-
-	module.exports = { createFoodsTable: createFoodsTable };
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-=======
 
 	'use strict';
 
@@ -231,9 +206,8 @@
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
->>>>>>> master
 	var _meals = __webpack_require__(5);
 
 	if (window.location.pathname == '/') {

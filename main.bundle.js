@@ -91,7 +91,6 @@
 	});
 
 	var clickCalories = $(document).on('blur', '#food-table .food-calories', function (event) {
-	  console.log("food-calories clicked");
 	  var newCalories = this.innerHTML;
 	  var id = $(this.parentElement).attr("id");
 	  (0, _foods.editCalories)(newCalories, id);
@@ -207,7 +206,7 @@
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _meals = __webpack_require__(5);
 
@@ -217,7 +216,21 @@
 	  });
 	}
 
-	module.exports = { onIndexLoad: onIndexLoad };
+	var clickDeleteFromMeal = $(document).on('click', '.delete-from-diary', function (event) {
+	  var mealName = $(this).closest('table').prop('class');
+	  var foodId = $(this).closest('tr').prop('id');
+	  (0, _meals.deleteFromDiary)(mealName, foodId);
+	  $(this).closest('tr').remove();
+	});
+
+	$("#food-search").on("keyup", function () {
+	  var text = $(this).val().toLowerCase();
+	  var foodItem = $(".food-item");
+
+	  (0, _meals.foodSearch)(text, foodItem);
+	});
+
+	module.exports = { onIndexLoad: onIndexLoad, clickDeleteFromMeal: clickDeleteFromMeal };
 
 /***/ }),
 /* 5 */
@@ -226,31 +239,12 @@
 	"use strict";
 
 	var requestUrl = "http://localhost:3000/api/v1";
-
 	var totalGoalCalories = 2000;
-
-	var tableRow = function tableRow(food, calories) {
-	  return "<tr><td>" + food + "</td><td>" + calories + "</td></tr>";
-	};
-
-	var totalCaloriesRow = function totalCaloriesRow(calories) {
-	  return "<tr><th>Total Calories</th><td>" + calories + "</td></tr>";
-	};
-
-	var remainingCaloriesRow = function remainingCaloriesRow(calories) {
-	  var color = "";
-	  if (calories >= 0) {
-	    return "<tr><th>Remaining Calories</th><td class=\"remaining-calories\" style=\"color: green;\">" + calories + "</td></tr>";
-	  } else {
-	    return "<tr><th>Remaining Calories</th><td class=\"remaining-calories\" style=\"color: red;\">" + calories + "</td></tr>";
-	  }
-	};
 
 	var getMeals = function getMeals() {
 	  $.get(requestUrl + "/meals").then(function (meals) {
 	    populateTable(meals);
-	    calculateCalories(meals);
-	    generateTotals(meals);
+	    generateTotals();
 	    getAllFoods();
 	  });
 	};
@@ -260,83 +254,137 @@
 	    meal["foods"].forEach(function (item) {
 	      var food = item["name"];
 	      var calories = item["calories"];
-	      $("#" + meal["name"].toLowerCase() + "-table").append(tableRow(food, calories));
+	      $("#" + meal["name"].toLowerCase() + "-table").append("<tr id=" + item["id"] + "><td>" + food + "</td><td class=\"calories\">" + calories + "</td><td><button class=\"delete-from-diary\" type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>");
 	    });
+	    caloriesRow(meal["name"].toLowerCase());
 	  });
 	};
 
-	var calculateCalories = function calculateCalories(meals) {
-	  meals.forEach(function (meal) {
-	    var totalCalories = 0;
-	    meal["foods"].forEach(function (item) {
-	      totalCalories += item["calories"];
-	    });
-	    var remainingCalories = getRemainingCalories(meal, totalCalories);
-	    $("#" + meal["name"].toLowerCase() + "-table").append(totalCaloriesRow(totalCalories));
-	    $("#" + meal["name"].toLowerCase() + "-table").append(remainingCaloriesRow(remainingCalories));
-	  });
+	var caloriesRow = function caloriesRow(mealName) {
+	  $("#" + mealName + "-table tfoot").append("<tr><th>Total Calories</th><td class=\"meal-calories\"></td></tr>", "<tr><th>Remaining Calories</th><td class=\"remaining-calories\"></td></tr>");
+	  calculateCalories(mealName);
 	};
 
-	var getRemainingCalories = function getRemainingCalories(meal, totalCalories) {
-	  if (meal["name"] == "Breakfast") {
+	var calculateCalories = function calculateCalories(mealName) {
+	  var summedCalories = 0;
+
+	  $("#" + mealName + "-table .calories").each(function () {
+	    var value = parseInt($(this).text());
+	    summedCalories += value;
+	  });
+
+	  var remainingCalories = getRemainingCalories(mealName, summedCalories);
+
+	  $("#" + mealName + "-table tfoot .meal-calories").html("" + summedCalories);
+	  $("#" + mealName + "-table tfoot .remaining-calories").html("" + remainingCalories);
+
+	  colorCalories(mealName, remainingCalories);
+	};
+
+	var getRemainingCalories = function getRemainingCalories(mealName, totalCalories) {
+	  if (mealName == "breakfast") {
 	    return 400 - totalCalories;
-	  } else if (meal["name"] == "Lunch") {
+	  } else if (mealName == "lunch") {
 	    return 600 - totalCalories;
-	  } else if (meal["name"] == "Dinner") {
+	  } else if (mealName == "dinner") {
 	    return 800 - totalCalories;
-	  } else if (meal["name"] == "Snack") {
+	  } else if (mealName == "snack") {
 	    return 200 - totalCalories;
 	  }
 	};
 
-	var generateTotals = function generateTotals(meals) {
-	  var total = calculateTotal(meals);
-	  var remaining = totalGoalCalories - total;
-	  $('#consumed-calories').html("" + total);
-	  $('#total-remaining-calories').html("" + remaining);
-	  if (remaining >= 0) {
-	    $('#total-remaining-calories').css("color", "green");
+	var colorCalories = function colorCalories(mealName, calories) {
+	  if (calories >= 0) {
+	    $("#" + mealName + "-table .remaining-calories").css("color", "green");
 	  } else {
-	    $('#total-remaining-calories').css("color", "red");
+	    $("#" + mealName + "-table .remaining-calories").css("color", "red");
 	  }
-	};
-
-	var calculateTotal = function calculateTotal(meals) {
-	  var totalMealCalories = 0;
-	  meals.forEach(function (meal) {
-	    var calories = 0;
-	    meal["foods"].forEach(function (item) {
-	      calories += item["calories"];
-	    });
-	    totalMealCalories += calories;
-	  });
-	  return totalMealCalories;
 	};
 
 	var getAllFoods = function getAllFoods() {
 	  $.get(requestUrl + "/foods").then(function (foods) {
 	    foods.forEach(function (food) {
-	      $("#diary-food-table").append(foodsTableRow(food));
+	      $("#diary-food-table").append("<tr id=\"" + food.id + "\"><td><input type=\"checkbox\"/></td><td class=\"food-item\" >" + food["name"] + "</td><td>" + food["calories"] + "</td></tr>");
 	    });
 	  });
 	};
 
-	var foodsTableRow = function foodsTableRow(food) {
-	  return "<tr id=\"" + food.id + "\"><td><input type=\"checkbox\"/></td><td class=\"food-item\" >" + food["name"] + "</td><td>" + food["calories"] + "</td></tr>";
+	var generateTotals = function generateTotals() {
+	  var total = calculateTotal();
+	  var remaining = totalGoalCalories - total;
+	  $('#consumed-calories').html("" + total);
+	  $('#total-remaining-calories').html("" + remaining);
+	  colorCalories("totals", remaining);
 	};
 
-	$("#food-search").bind("keyup", function () {
-	  var text = $(this).val().toLowerCase();
-	  var foodItem = $(".food-item");
+	var calculateTotal = function calculateTotal() {
+	  var totalMealCalories = 0;
+	  $('.meal-calories').each(function () {
+	    totalMealCalories += parseFloat($(this).text());
+	  });
+	  return totalMealCalories;
+	};
 
+	var deleteFromDiary = function deleteFromDiary(mealName, foodId) {
+	  var mealId = 0;
+
+	  if (mealName == "breakfast") {
+	    mealId = 1;
+	  } else if (mealName == "lunch") {
+	    mealId = 3;
+	  } else if (mealName == "dinner") {
+	    mealId = 4;
+	  } else if (mealName == "snack") {
+	    mealId = 2;
+	  }
+
+	  $.ajax({
+	    url: requestUrl + "/meals/" + mealId + "/foods/" + foodId,
+	    type: 'DELETE',
+	    success: function success(result) {
+	      calculateCalories(mealName);
+	      generateTotals();
+	    }
+	  });
+	};
+
+	var foodSearch = function foodSearch(text, foodItem) {
 	  foodItem.parent().hide();
 
 	  foodItem.filter(function () {
 	    return $(this).text().toLowerCase().indexOf(text) == 0;
 	  }).parent().show();
+	};
+
+	$(".add-to-meal-button").on("click", function () {
+	  var meal = $(this).prop('id');
+
+	  $('input:checkbox:checked').parent().each(function () {
+	    var foodId = $(this).parent().prop('id');
+
+	    if (meal == "breakfast") {
+	      $.post(requestUrl + "/meals/1/foods/" + foodId);
+	    } else if (meal == "lunch") {
+	      $.post(requestUrl + "/meals/3/foods/" + foodId);
+	    } else if (meal == "dinner") {
+	      $.post(requestUrl + "/meals/4/foods/" + foodId);
+	    } else if (meal == "snack") {
+	      $.post(requestUrl + "/meals/2/foods/" + foodId);
+	    }
+
+	    $.get(requestUrl + "/foods/" + foodId).then(function (food) {
+	      var foodName = food["name"];
+	      var calories = food["calories"];
+
+	      $("#" + meal + "-table tbody").append("<tr id=" + food["id"] + "><td>" + foodName + "</td><td class=\"calories\">" + calories + "</td><td><button class=\"delete-from-diary\" type=\"submit\"><img src=\"/lib/assets/images/delete.png\" /></button></td>></tr>");
+	      $("input:checkbox:checked").prop('checked', false);
+	      calculateCalories(meal);
+	      generateTotals();
+	    });
+	  });
 	});
 
-	module.exports = { getMeals: getMeals };
+	module.exports = { getMeals: getMeals, getAllFoods: getAllFoods, deleteFromDiary: deleteFromDiary, foodSearch: foodSearch };
 
 /***/ })
 /******/ ]);

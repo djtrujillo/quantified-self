@@ -8,35 +8,51 @@
 </head>
 <body>
   <h2>Breakfast</h2>
-  <table id='breakfast-table'>
-    <tr>
-      <th>Name</th>
-      <th>Calories</th>
-    </tr>
+  <table id='breakfast-table' class="breakfast">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Calories</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
   </table>
 
   <h2>Lunch</h2>
-  <table id='lunch-table'>
-    <tr>
-      <th>Name</th>
-      <th>Calories</th>
-    </tr>
+  <table id='lunch-table' class="lunch">
+    <thead>
+      <tr class="diary-table-header">
+        <th>Name</th>
+        <th>Calories</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
   </table>
 
   <h2>Dinner</h2>
-  <table id='dinner-table'>
-    <tr>
-      <th>Name</th>
-      <th>Calories</th>
-    </tr>
+  <table id='dinner-table' class="dinner">
+    <thead>
+      <tr class="diary-table-header">
+        <th>Name</th>
+        <th>Calories</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
   </table>
 
   <h2>Snacks</h2>
-  <table id='snack-table'>
-    <tr>
-      <th>Name</th>
-      <th>Calories</th>
-    </tr>
+  <table id='snack-table' class="snack">
+    <thead>
+      <tr class="diary-table-header">
+        <th>Name</th>
+        <th>Calories</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
   </table>
 
   <h2>Totals</h2>
@@ -51,12 +67,17 @@
     </tr>
     <tr>
       <th>Remaining Calories</th>
-      <td id="total-remaining-calories"></td>
+      <td id="total-remaining-calories" class="remaining-calories"></td>
     </tr>
   </table>
 
   <h2>Foods</h2>
-  <input type="button" onclick="location.href='/foods.html';" value="Create New" />
+  <input type="button" onclick="location.href='/foods.html';" value="Create New">
+  <p><b>Add Selected To</b></p>
+  <button id="breakfast" class="add-to-meal-button">Breakfast</button>
+  <button id="lunch" class="add-to-meal-button">Lunch</button>
+  <button id="dinner" class="add-to-meal-button">Dinner</button>
+  <button id="snack" class="add-to-meal-button">Snacks</button>
   <p><b>Search by Name</b></p>
   <form>
     <input type="text" name="food-search" id="food-search">

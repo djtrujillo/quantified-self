@@ -304,9 +304,13 @@
 	var getAllFoods = function getAllFoods() {
 	  $.get(requestUrl + "/foods").then(function (foods) {
 	    foods.forEach(function (food) {
-	      $("#diary-food-table").append("<tr id=\"" + food.id + "\"><td><input type=\"checkbox\"/></td><td class=\"food-item\" >" + food["name"] + "</td><td>" + food["calories"] + "</td></tr>");
+	      buildFoodTable(food);
 	    });
 	  });
+	};
+
+	var buildFoodTable = function buildFoodTable(food) {
+	  $("#diary-food-table").append("<tr id=\"" + food.id + "\"><td><input type=\"checkbox\"/></td><td class=\"food-item\" >" + food["name"] + "</td><td class=\"food-calories\">" + food["calories"] + "</td></tr>");
 	};
 
 	var generateTotals = function generateTotals() {
@@ -356,21 +360,16 @@
 	  }).parent().show();
 	};
 
-	$(".add-to-meal-button").on("click", function () {
+	var mealIdTable = { "breakfast": 1, "snack": 2, "lunch": 3, "dinner": 4
+
+	  // function addToMealButtonListener() {
+	};$(".add-to-meal-button").on("click", function () {
 	  var meal = $(this).prop('id');
 
 	  $('input:checkbox:checked').parent().each(function () {
 	    var foodId = $(this).parent().prop('id');
 
-	    if (meal == "breakfast") {
-	      $.post(requestUrl + "/meals/1/foods/" + foodId);
-	    } else if (meal == "lunch") {
-	      $.post(requestUrl + "/meals/3/foods/" + foodId);
-	    } else if (meal == "dinner") {
-	      $.post(requestUrl + "/meals/4/foods/" + foodId);
-	    } else if (meal == "snack") {
-	      $.post(requestUrl + "/meals/2/foods/" + foodId);
-	    }
+	    $.post(requestUrl + "/meals/" + mealIdTable[meal] + "/foods/" + foodId);
 
 	    $.get(requestUrl + "/foods/" + foodId).then(function (food) {
 	      var foodName = food["name"];
@@ -381,6 +380,46 @@
 	      calculateCalories(meal);
 	      generateTotals();
 	    });
+	  });
+	});
+	// }
+
+	// #calorie-sorter
+
+	$("#calorie-sorter").on("click", function () {
+	  var rowsToSort = [];
+	  var currentSorting = $('#diary-food-table').prop('class');
+
+	  $('#diary-food-table tbody tr').each(function () {
+	    var foodId = $(this).prop('id');
+	    var foodName = $(this).children('.food-item').text();
+	    var foodCalories = $(this).children('.food-calories').text();
+	    var rowInformation = { 'id': foodId, 'name': foodName, 'calories': foodCalories };
+
+	    rowsToSort.push(rowInformation);
+	  });
+
+	  if (currentSorting == 'default') {
+	    rowsToSort.sort(function (a, b) {
+	      $('#diary-food-table').prop('class', 'asc');
+	      return parseInt(a.calories) - parseInt(b.calories);
+	    });
+	  } else if (currentSorting == 'asc') {
+	    rowsToSort.sort(function (a, b) {
+	      $('#diary-food-table').prop('class', 'desc');
+	      return b.calories - a.calories;
+	    });
+	  } else {
+	    rowsToSort.sort(function (a, b) {
+	      $('#diary-food-table').prop('class', 'default');
+	      return a.id - b.id;
+	    });
+	  }
+
+	  $("#diary-food-table tbody").empty();
+
+	  rowsToSort.forEach(function (food) {
+	    buildFoodTable(food);
 	  });
 	});
 

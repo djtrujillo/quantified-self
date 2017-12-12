@@ -48,7 +48,7 @@
 
 	var _foodEvents = __webpack_require__(1);
 
-	var _mealEvents = __webpack_require__(4);
+	var _mealEvents = __webpack_require__(5);
 
 /***/ }),
 /* 1 */
@@ -111,6 +111,8 @@
 
 	var _foodResponseHandlers = __webpack_require__(3);
 
+	var _meals = __webpack_require__(4);
+
 	var requestUrl = "http://localhost:3000/api/v1";
 
 	var getFoods = function getFoods() {
@@ -132,7 +134,96 @@
 	  });
 	};
 
+	var getMeals = function getMeals() {
+	  $.get('http://localhost:3000/api/v1/meals').then(function (meals) {
+	    var allMeals = meals;
+	    debugger;
+	  });
+	};
+
+	function deleteFromBreakfast(id) {
+	  $.get("http://localhost:3000/api/v1/meals/1/foods").then(function (foods) {
+	    var breakfast = foods;
+	    var breakfastFoods = foods.foods;
+	    var result = $.grep(breakfastFoods, function (e) {
+	      return e.id == id;
+	    });
+	    if (result.length == 1) {
+	      var mealName = "breakfast";
+	      var foodId = id;
+	    } else {
+	      var mealName = null;
+	      var foodId = null;
+	    }
+	    if (mealName != null) {
+	      (0, _meals.deleteFromDiary)(mealName, foodId);
+	    }
+	  });
+	}
+
+	function deleteFromSnack(id) {
+	  $.get("http://localhost:3000/api/v1/meals/2/foods").then(function (foods) {
+	    var breakfast = foods;
+	    var breakfastFoods = foods.foods;
+	    var result = $.grep(breakfastFoods, function (e) {
+	      return e.id == id;
+	    });
+	    if (result.length == 1) {
+	      var mealName = "snack";
+	      var foodId = id;
+	    } else {
+	      var mealName = null;
+	      var foodId = null;
+	    }
+	    if (mealName != null) {
+	      (0, _meals.deleteFromDiary)(mealName, foodId);
+	    }
+	  });
+	}
+
+	function deleteFromLunch(id) {
+	  $.get("http://localhost:3000/api/v1/meals/3/foods").then(function (foods) {
+	    var breakfast = foods;
+	    var breakfastFoods = foods.foods;
+	    var result = $.grep(breakfastFoods, function (e) {
+	      return e.id == id;
+	    });
+	    if (result.length == 1) {
+	      var mealName = "lunch";
+	      var foodId = id;
+	    } else {
+	      var mealName = null;
+	      var foodId = null;
+	    }
+	    if (mealName != null) {
+	      (0, _meals.deleteFromDiary)(mealName, foodId);
+	    }
+	  });
+	}
+
+	function deleteFromDinner(id) {
+	  $.get("http://localhost:3000/api/v1/meals/4/foods").then(function (foods) {
+	    var breakfast = foods;
+	    var breakfastFoods = foods.foods;
+	    var result = $.grep(breakfastFoods, function (e) {
+	      return e.id == id;
+	    });
+	    if (result.length == 1) {
+	      var mealName = "dinner";
+	      var foodId = id;
+	    } else {
+	      var mealName = null;
+	      var foodId = null;
+	    }
+	    if (mealName != null) {
+	      (0, _meals.deleteFromDiary)(mealName, foodId);
+	    }
+	  });
+	}
+
 	var deleteFood = function deleteFood(id) {
+	  Promise.all([deleteFromBreakfast(id), deleteFromSnack(id), deleteFromLunch(id), deleteFromDinner(id)]);
+
 	  $.ajax({
 	    url: requestUrl + "/foods/" + id,
 	    type: 'DELETE',
@@ -147,9 +238,7 @@
 	    url: requestUrl + "/foods/" + id,
 	    type: 'PATCH',
 	    data: { food: { "name": newFood } },
-	    success: function success(food) {
-	      location.reload(true);
-	    }
+	    success: function success(food) {}
 	  });
 	};
 
@@ -158,9 +247,7 @@
 	    url: requestUrl + "/foods/" + id,
 	    type: 'PATCH',
 	    data: { food: { "calories": newCalories } },
-	    success: function success(result) {
-	      location.reload(true);
-	    }
+	    success: function success(result) {}
 	  });
 	};
 
@@ -204,36 +291,6 @@
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _meals = __webpack_require__(5);
-
-	if (window.location.pathname == '/') {
-	  var _onIndexLoad = $(document).ready(function () {
-	    (0, _meals.getMeals)();
-	  });
-	}
-
-	var clickDeleteFromMeal = $(document).on('click', '.delete-from-diary', function (event) {
-	  var mealName = $(this).closest('table').prop('class');
-	  var foodId = $(this).closest('tr').prop('id');
-	  (0, _meals.deleteFromDiary)(mealName, foodId);
-	  $(this).closest('tr').remove();
-	});
-
-	$("#food-search").on("keyup", function () {
-	  var text = $(this).val().toLowerCase();
-	  var foodItem = $(".food-item");
-
-	  (0, _meals.foodSearch)(text, foodItem);
-	});
-
-	module.exports = { onIndexLoad: onIndexLoad, clickDeleteFromMeal: clickDeleteFromMeal };
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -424,6 +481,36 @@
 	});
 
 	module.exports = { getMeals: getMeals, getAllFoods: getAllFoods, deleteFromDiary: deleteFromDiary, foodSearch: foodSearch };
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _meals = __webpack_require__(4);
+
+	if (window.location.pathname == '/') {
+	  var _onIndexLoad = $(document).ready(function () {
+	    (0, _meals.getMeals)();
+	  });
+	}
+
+	var clickDeleteFromMeal = $(document).on('click', '.delete-from-diary', function (event) {
+	  var mealName = $(this).closest('table').prop('class');
+	  var foodId = $(this).closest('tr').prop('id');
+	  (0, _meals.deleteFromDiary)(mealName, foodId);
+	  $(this).closest('tr').remove();
+	});
+
+	$("#food-search").on("keyup", function () {
+	  var text = $(this).val().toLowerCase();
+	  var foodItem = $(".food-item");
+
+	  (0, _meals.foodSearch)(text, foodItem);
+	});
+
+	module.exports = { onIndexLoad: onIndexLoad, clickDeleteFromMeal: clickDeleteFromMeal };
 
 /***/ })
 /******/ ]);

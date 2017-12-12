@@ -141,96 +141,35 @@
 	  });
 	};
 
-	function deleteFromBreakfast(id) {
-	  $.get("http://localhost:3000/api/v1/meals/1/foods").then(function (foods) {
-	    var breakfast = foods;
-	    var breakfastFoods = foods.foods;
-	    var result = $.grep(breakfastFoods, function (e) {
-	      return e.id == id;
-	    });
-	    if (result.length == 1) {
-	      var mealName = "breakfast";
-	      var foodId = id;
-	    } else {
-	      var mealName = null;
-	      var foodId = null;
-	    }
-	    if (mealName != null) {
-	      (0, _meals.deleteFromDiary)(mealName, foodId);
-	    }
-	  });
-	}
+	// const checkIfFoodExistsInMeal = (id) => {
+	//   var meals = []
+	//   for (var i = 1; i < 5; i++) {
+	//
+	//     $.get(`http://localhost:3000/api/v1/meals/${i}/foods`)
+	//     .then(function(foods) {
+	//
+	//       let mealItems = foods.foods
+	//       var result = $.grep(mealItems, function(e) {
+	//         return e.id == id
+	//       })
+	//
+	//       if (result.length == 1) {
+	//         meals.push(foods.name.toLowerCase())
+	//       }
+	//   debugger
+	//     })
+	//   }
+	// }
 
-	function deleteFromSnack(id) {
-	  $.get("http://localhost:3000/api/v1/meals/2/foods").then(function (foods) {
-	    var breakfast = foods;
-	    var breakfastFoods = foods.foods;
-	    var result = $.grep(breakfastFoods, function (e) {
-	      return e.id == id;
-	    });
-	    if (result.length == 1) {
-	      var mealName = "snack";
-	      var foodId = id;
-	    } else {
-	      var mealName = null;
-	      var foodId = null;
-	    }
-	    if (mealName != null) {
-	      (0, _meals.deleteFromDiary)(mealName, foodId);
-	    }
-	  });
-	}
-
-	function deleteFromLunch(id) {
-	  $.get("http://localhost:3000/api/v1/meals/3/foods").then(function (foods) {
-	    var breakfast = foods;
-	    var breakfastFoods = foods.foods;
-	    var result = $.grep(breakfastFoods, function (e) {
-	      return e.id == id;
-	    });
-	    if (result.length == 1) {
-	      var mealName = "lunch";
-	      var foodId = id;
-	    } else {
-	      var mealName = null;
-	      var foodId = null;
-	    }
-	    if (mealName != null) {
-	      (0, _meals.deleteFromDiary)(mealName, foodId);
-	    }
-	  });
-	}
-
-	function deleteFromDinner(id) {
-	  $.get("http://localhost:3000/api/v1/meals/4/foods").then(function (foods) {
-	    var breakfast = foods;
-	    var breakfastFoods = foods.foods;
-	    var result = $.grep(breakfastFoods, function (e) {
-	      return e.id == id;
-	    });
-	    if (result.length == 1) {
-	      var mealName = "dinner";
-	      var foodId = id;
-	    } else {
-	      var mealName = null;
-	      var foodId = null;
-	    }
-	    if (mealName != null) {
-	      (0, _meals.deleteFromDiary)(mealName, foodId);
-	    }
-	  });
-	}
 
 	var deleteFood = function deleteFood(id) {
-	  Promise.all([deleteFromBreakfast(id), deleteFromSnack(id), deleteFromLunch(id), deleteFromDinner(id)]);
-
-	  $.ajax({
+	  Promise.all([(0, _meals.deleteFromDiary)("breakfast", id), (0, _meals.deleteFromDiary)("snack", id), (0, _meals.deleteFromDiary)("lunch", id), (0, _meals.deleteFromDiary)("dinner", id)]).then($.ajax({
 	    url: requestUrl + "/foods/" + id,
 	    type: 'DELETE',
 	    success: function success(result) {
 	      (0, _foodResponseHandlers.hideTableRow)(id);
 	    }
-	  });
+	  }));
 	};
 
 	var editFood = function editFood(newFood, id) {

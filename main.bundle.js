@@ -429,11 +429,9 @@
 
 	var _meals = __webpack_require__(4);
 
-	if (window.location.pathname == '/') {
-	  var _onIndexLoad = $(document).ready(function () {
-	    (0, _meals.getMeals)();
-	  });
-	}
+	var onIndexLoad = $(document).ready(function () {
+	  (0, _meals.getMeals)();
+	});
 
 	var clickDeleteFromMeal = $(document).on('click', '.delete-from-diary', function (event) {
 	  var mealName = $(this).closest('table').prop('class');

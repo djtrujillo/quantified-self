@@ -306,6 +306,7 @@
 	};
 
 	var buildFoodTable = function buildFoodTable(food) {
+	  console.log('this is working');
 	  $("#diary-food-table").append("<tr id=\"" + food.id + "\"><td><input type=\"checkbox\"/></td><td class=\"food-item\" >" + food["name"] + "</td><td class=\"food-calories\">" + food["calories"] + "</td></tr>");
 	};
 

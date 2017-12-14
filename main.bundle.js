@@ -113,7 +113,7 @@
 
 	var _meals = __webpack_require__(4);
 
-	var requestUrl = "http://localhost:3000/api/v1";
+	var requestUrl = "https://shielded-brook-80133.herokuapp.com/api/v1";
 
 	var getFoods = function getFoods() {
 	  $.get(requestUrl + "/foods").then(function (foods) {
@@ -135,7 +135,7 @@
 	};
 
 	var getMeals = function getMeals() {
-	  $.get('http://localhost:3000/api/v1/meals').then(function (meals) {
+	  $.get('https://shielded-brook-80133.herokuapp.com/api/v1/meals').then(function (meals) {
 	    var allMeals = meals;
 	    debugger;
 	  });
@@ -145,7 +145,7 @@
 	//   var meals = []
 	//   for (var i = 1; i < 5; i++) {
 	//
-	//     $.get(`http://localhost:3000/api/v1/meals/${i}/foods`)
+	//     $.get(`https://shielded-brook-80133.herokuapp.com/api/v1/meals/${i}/foods`)
 	//     .then(function(foods) {
 	//
 	//       let mealItems = foods.foods
@@ -234,7 +234,7 @@
 
 	"use strict";
 
-	var requestUrl = "http://localhost:3000/api/v1";
+	var requestUrl = "https://shielded-brook-80133.herokuapp.com/api/v1";
 	var totalGoalCalories = 2000;
 
 	var getMeals = function getMeals() {

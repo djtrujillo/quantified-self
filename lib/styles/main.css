@@ -1,0 +1,63 @@
+#new-food-submit {
+    background-color: #008CBA;
+    border: 1px solid black;
+    color: black;
+    border-radius: 12px;
+    /*padding: 15px 32px;*/
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+
+#food-table {
+  table-layout: fixed;
+  width: 25%
+}
+
+.delete-food {
+  font-size: 16px;
+  border: 1px solid black;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+}
+
+.delete-from-diary {
+  font-size: 16px;
+  border: 1px solid black;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+}
+
+ th, td {
+  border: 1px solid black;
+}
+
+.food-calories {
+  border: 1px solid black;
+}
+
+td:last-child {
+  border: none;
+}
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+  justify-content: space-between;
+}
+
+.meal-buttons button, #new-food {
+  background-color: #008CBA;
+  border: 1px solid black;
+  color: white;
+  border-radius: 12px;
+  /*padding: 15px 32px;*/
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}

@@ -7,32 +7,39 @@
   <title>Quantified Self - Diary</title>
 </head>
 <body>
-  <h2>Breakfast</h2>
-  <table id='breakfast-table' class="breakfast">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Calories</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-    <tfoot></tfoot>
-  </table>
+  <h1>Main Diary</h1>
+  <div class="flex-container">
+    <table id='breakfast-table' class="breakfast" style="display: inline-block">
+      <caption><h2>Breakfast</h2></caption>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Calories</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot></tfoot>
+    </table>
 
-  <h2>Lunch</h2>
-  <table id='lunch-table' class="lunch">
-    <thead>
-      <tr class="diary-table-header">
-        <th>Name</th>
-        <th>Calories</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-    <tfoot></tfoot>
-  </table>
 
-  <h2>Dinner</h2>
+    <table id='lunch-table' class="lunch" style="display: inline-block">
+      <caption><h2>Lunch</h2></caption>
+      <thead>
+        <tr class="diary-table-header">
+          <th>Name</th>
+          <th>Calories</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot></tfoot>
+    </table>
+
+  </div>
+
+<div class="flex-container">
+
   <table id='dinner-table' class="dinner">
+    <caption><h2>Dinner</h2></caption>
     <thead>
       <tr class="diary-table-header">
         <th>Name</th>
@@ -43,8 +50,9 @@
     <tfoot></tfoot>
   </table>
 
-  <h2>Snacks</h2>
+
   <table id='snack-table' class="snack">
+    <caption><h2>Snacks</h2></caption>
     <thead>
       <tr class="diary-table-header">
         <th>Name</th>
@@ -54,6 +62,8 @@
     <tbody></tbody>
     <tfoot></tfoot>
   </table>
+
+</div>
 
   <h2>Totals</h2>
   <table id='totals-table'>
@@ -72,16 +82,20 @@
   </table>
 
   <h2>Foods</h2>
-  <input type="button" onclick="location.href='/quantified-self/foods.html';" value="Create New">
+  <input id="new-food" type="button" onclick="location.href='/quantified-self/foods.html';" value="Create New">
   <p><b>Add Selected To</b></p>
-  <button id="breakfast" class="add-to-meal-button">Breakfast</button>
-  <button id="lunch" class="add-to-meal-button">Lunch</button>
-  <button id="dinner" class="add-to-meal-button">Dinner</button>
-  <button id="snack" class="add-to-meal-button">Snacks</button>
+  <div class="meal-buttons">
+    <button id="breakfast" class="add-to-meal-button">Breakfast</button>
+    <button id="lunch" class="add-to-meal-button">Lunch</button>
+    <button id="dinner" class="add-to-meal-button">Dinner</button>
+    <button id="snack" class="add-to-meal-button">Snacks</button>
+
+  </div>
   <p><b>Search by Name</b></p>
   <form>
     <input type="text" name="food-search" id="food-search">
   </form>
+  <br>
   <table id='diary-food-table' class="default">
     <thead>
     <tr>

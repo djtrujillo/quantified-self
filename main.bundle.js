@@ -58,12 +58,9 @@
 
 	var _foods = __webpack_require__(2);
 
-	// if (window.location.pathname == '/foods.html') {
-
 	var onLoad = $(document).ready(function () {
 	  (0, _foods.getFoods)();
-	}); // const getFoods = require('../requests/foods')
-
+	});
 
 	var clickSubmit = $('#new-food-submit').on('click', function (event) {
 	  event.preventDefault();
@@ -101,7 +98,9 @@
 	  (0, _foods.filterByName)(input);
 	});
 
-	module.exports = { onLoad: onLoad, clickSubmit: clickSubmit, clickDelete: clickDelete, clickFood: clickFood, clickCalories: clickCalories, filter: filter };
+	module.exports = {
+	  onLoad: onLoad, clickSubmit: clickSubmit, clickDelete: clickDelete, clickFood: clickFood, clickCalories: clickCalories, filter: filter
+	};
 
 /***/ }),
 /* 2 */
@@ -140,27 +139,6 @@
 	    debugger;
 	  });
 	};
-
-	// const checkIfFoodExistsInMeal = (id) => {
-	//   var meals = []
-	//   for (var i = 1; i < 5; i++) {
-	//
-	//     $.get(`https://shielded-brook-80133.herokuapp.com/api/v1/meals/${i}/foods`)
-	//     .then(function(foods) {
-	//
-	//       let mealItems = foods.foods
-	//       var result = $.grep(mealItems, function(e) {
-	//         return e.id == id
-	//       })
-	//
-	//       if (result.length == 1) {
-	//         meals.push(foods.name.toLowerCase())
-	//       }
-	//   debugger
-	//     })
-	//   }
-	// }
-
 
 	var deleteFood = function deleteFood(id) {
 	  Promise.all([(0, _meals.deleteFromDiary)("breakfast", id), (0, _meals.deleteFromDiary)("snack", id), (0, _meals.deleteFromDiary)("lunch", id), (0, _meals.deleteFromDiary)("dinner", id)]).then($.ajax({
@@ -201,7 +179,9 @@
 	  }).parent().show();
 	};
 
-	module.exports = { getFoods: getFoods, postFood: postFood, deleteFood: deleteFood, editFood: editFood, editCalories: editCalories, filterByName: filterByName };
+	module.exports = {
+	  getFoods: getFoods, postFood: postFood, deleteFood: deleteFood, editFood: editFood, editCalories: editCalories, filterByName: filterByName
+	};
 
 /***/ }),
 /* 3 */
@@ -226,7 +206,9 @@
 	  makeContentEditable();
 	};
 
-	module.exports = { makeContentEditable: makeContentEditable, hideTableRow: hideTableRow, addFoodToTable: addFoodToTable };
+	module.exports = {
+	  makeContentEditable: makeContentEditable, hideTableRow: hideTableRow, addFoodToTable: addFoodToTable
+	};
 
 /***/ }),
 /* 4 */
@@ -306,7 +288,6 @@
 	};
 
 	var buildFoodTable = function buildFoodTable(food) {
-	  console.log('this is working');
 	  $("#diary-food-table").append("<tr id=\"" + food.id + "\"><td><input type=\"checkbox\"/></td><td class=\"food-item\" >" + food["name"] + "</td><td class=\"food-calories\">" + food["calories"] + "</td></tr>");
 	};
 
@@ -357,10 +338,8 @@
 	  }).parent().show();
 	};
 
-	var mealIdTable = { "breakfast": 1, "snack": 2, "lunch": 3, "dinner": 4
-
-	  // function addToMealButtonListener() {
-	};$(".add-to-meal-button").on("click", function () {
+	var mealIdTable = { "breakfast": 1, "snack": 2, "lunch": 3, "dinner": 4 };
+	$(".add-to-meal-button").on("click", function () {
 	  var meal = $(this).prop('id');
 
 	  $('input:checkbox:checked').parent().each(function () {
@@ -379,9 +358,6 @@
 	    });
 	  });
 	});
-	// }
-
-	// #calorie-sorter
 
 	$("#calorie-sorter").on("click", function () {
 	  var rowsToSort = [];
@@ -420,7 +396,9 @@
 	  });
 	});
 
-	module.exports = { getMeals: getMeals, getAllFoods: getAllFoods, deleteFromDiary: deleteFromDiary, foodSearch: foodSearch };
+	module.exports = {
+	  getMeals: getMeals, getAllFoods: getAllFoods, deleteFromDiary: deleteFromDiary, foodSearch: foodSearch
+	};
 
 /***/ }),
 /* 5 */
@@ -448,7 +426,9 @@
 	  (0, _meals.foodSearch)(text, foodItem);
 	});
 
-	module.exports = { onIndexLoad: onIndexLoad, clickDeleteFromMeal: clickDeleteFromMeal };
+	module.exports = {
+	  onIndexLoad: onIndexLoad, clickDeleteFromMeal: clickDeleteFromMeal
+	};
 
 /***/ })
 /******/ ]);
